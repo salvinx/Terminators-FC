@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminators FC</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0; /* Light gray background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #007BFF; /* Blue header color */
+            margin-top: 20px;
+        }
+
+        #player-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .player-card {
+            background-color: #ffffff; /* White player card background */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+            width: 200px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        #start-button {
+            background-color: #FFD700; /* Yellow button color */
+            color: #ffffff; /* White text color */
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        #start-button:hover {
+            background-color: #FFC107; /* Darker yellow on hover */
+        }
+
+        #stats-output {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .player-container {
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-scorer {
+            background-color: #ffcc00; /* Highlight color for top scorer */
+        }
+    </style>
+</head>
+<body>
+    <h1>Terminators FC</h1>
+
+    <div id="player-list">
+        <!-- Player cards will be displayed here dynamically -->
+    </div>
+
+    <button id="start-button" onclick="showStats()">Start</button>
+    <div id="stats-output">
+        <!-- Player content boxes will be displayed here dynamically -->
+    </div>
+
+    <script>
+        // Function to show player stats and highlight top scorer
+        function showStats() {
+            const playerList = document.getElementById('player-list').children;
+            const statsOutput = document.getElementById('stats-output');
+            statsOutput.innerHTML = ''; // Clear previous stats
+
+            // Create an array to store player objects for sorting
+            const playersArray = [];
+
+            for (let i = 0; i < playerList.length; i++) {
+                const playerName = document.getElementById(`player-${i + 1}-name`).value;
+                const goals = document.getElementById(`${playerName}-goals`).value;
+                const assists = document.getElementById(`${playerName}-assists`).value;
+
+                const player = {
+                    name: playerName,
+                    goals: parseInt(goals),
+                    assists: parseInt(assists),
+                };
+
+                playersArray.push(player);
+
+                // Display player content box
+                const playerContentBox = document.createElement('div');
+                playerContentBox.classList.add('player-container');
+                playerContentBox.innerHTML = `<p>${playerName}</p>`;
+                playerContentBox.innerHTML += `<p>Goals: ${goals}</p>`;
+                playerContentBox.innerHTML += `<p>Assists: ${assists}</p>`;
+                statsOutput.appendChild(playerContentBox);
+            }
+
+            // Sort players by goals (descending order)
+            playersArray.sort((a, b) => b.goals - a.goals);
+
+            // Highlight the top scorer
+            const topScorerName = playersArray[0].name;
+            const topScorerStats = document.querySelector(`[data-name="${topScorerName}"]`);
+            topScorerStats.classList.add('top-scorer');
+        }
+
+        // Function to add a player card
+        function addPlayerCard(playerNumber) {
+            const playerList = document.getElementById('player-list');
+            const playerCard = document.createElement('div');
+            playerCard.classList.add('player-card');
+
+            // Player name
+            const playerNameLabel = document.createElement('label');
+            playerNameLabel.innerHTML = 'Player Name:';
+            playerCard.appendChild(playerNameLabel);
+
+            const playerNameInput = document.createElement('input');
+            playerNameInput.id = `player-${playerNumber}-name`;
+            playerNameInput.type = 'text';
+            playerNameInput.placeholder = 'Enter player name';
+            playerCard.appendChild(playerNameInput);
+
+            // Goals input
+            const goalsLabel = document.createElement('label');
+            goalsLabel.innerHTML = 'Goals:';
+            playerCard.appendChild(goalsLabel);
+
+            const goalsInput = document.createElement('input');
+            goalsInput.id = `${playerNameInput.value}-goals`;
+            goalsInput.type = 'number';
+            goalsInput.value = '0';
+            playerCard.appendChild(goalsInput);
+
+            // Assists input
+            const assistsLabel = document.createElement('label');
+            assistsLabel.innerHTML = 'Assists:';
+            playerCard.appendChild(assistsLabel);
+
+            const assistsInput = document.createElement('input');
+            assistsInput.id = `${playerNameInput.value}-assists`;
+            assistsInput.type = 'number';
+            assistsInput.value = '0';
+            playerCard.appendChild(assistsInput);
+
+            // Append player card to the player list
+            playerList.appendChild(playerCard);
+        }
+
+        // Add players dynamically based on the number of players you want
+        const numberOfPlayers = 20; // Change this value to the desired number of players
+        for (let i = 1; i <= numberOfPlayers; i++) {
+            addPlayerCard(i);
+        }
+    </script>
+</body>
+
